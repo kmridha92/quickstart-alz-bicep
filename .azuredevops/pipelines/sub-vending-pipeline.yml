@@ -33,8 +33,7 @@ jobs:
         --location $(Location) \
         --management-group-id $(ManagementGroupId) \
         --template-file $(TemplateFile) \
-        --confirm-with-what-if 'true' \
-        --what-if-result-format FullResourcePayloads \
+        --confirm-with-what-if --what-if-result-format FullResourcePayloads \
 
 
         
