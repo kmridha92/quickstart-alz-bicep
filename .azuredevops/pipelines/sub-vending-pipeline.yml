@@ -12,7 +12,7 @@ parameters:
   default: management-sub.parameters.json
 
 variables:
-  ServiceConnectionName: "rapid-alz-bicep-SP"
+  ServiceConnectionName: "rapid-alz-bicep"
   RunNumber: $(Build.BuildNumber)
   DeploymentName: "sub-vend-$(RunNumber)"
   ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
@@ -28,6 +28,7 @@ jobs:
     displayName: Az CLI Deploy Subscription
     name: create_mgs
     inputs:
+      workingDirectory: '$(Build.SourcesDirectory)'
       azureSubscription: '$(ServiceConnectionName)'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
@@ -38,9 +39,3 @@ jobs:
         --management-group-id $(ManagementGroupId) \
         --template-file $(TemplateFile) \
         --parameters $(TemplateParameterFile)
-      addSpnToEnvironment: true
-      useGlobalConfig: true
-      workingDirectory: '$(Build.SourcesDirectory)'
-
-
-        
