@@ -11,8 +11,8 @@ variables:
   DeploymentName: "sub-vend-$(RunNumber)"
   ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
   Location: "australiaeast"
-  TemplateParameterFile: "@/parameters/subscription/identity-sub.parameters.json"
-  TemplateFile: "/subscription.bicep"
+  TemplateParameterFile: "parameters/subscription/identity-sub.parameters.json"
+  TemplateFile: "subscription.bicep"
 
 jobs:
 - job: SubscriptonVending
