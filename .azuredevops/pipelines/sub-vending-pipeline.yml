@@ -27,8 +27,9 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az deployment mg create \
-        --template-file $(TemplateFile) \
+        --name $(DeploymentName:0:63) \
         --parameters $(TemplateParameterFile) \
         --location $(Location) \
         --management-group-id $(ManagementGroupId) \
-        --name $(DeploymentName:0:63)
+        --template-file $(TemplateFile) \
+        
