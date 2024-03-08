@@ -15,7 +15,8 @@ variables:
   ServiceConnectionName: "rapid-alz-bicep"
   RunNumber: $(Build.BuildNumber)
   DeploymentName: "sub-vend-$(RunNumber)"
-  ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
+  # ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
+  ManagementGroupId : "poc"
   Location: "australiaeast"
   TemplateParameterFile: "parameters/subscription/${{ parameters.ParametersFile }}"
   TemplateFile: "subscription.bicep"
