@@ -15,11 +15,11 @@ variables:
   TemplateFile: "/subscription.bicep"
 
 jobs:
-- job:
+- job: SubscriptonVending
   steps:
 
   - task: AzureCLI@2
-    displayName: Az CLI Deploy Management Groups
+    displayName: Az CLI Deploy Subscription
     name: create_mgs
     inputs:
       azureSubscription: $(ServiceConnectionName)
@@ -30,5 +30,5 @@ jobs:
         --template-file $(TemplateFile) \
         --parameters $(TemplateParameterFile) \
         --location $(Location) \
-        -- --management-group-id $(ManagementGroupId) \
+        --management-group-id $(ManagementGroupId) \
         --name --name $(DeploymentName:0:63)
