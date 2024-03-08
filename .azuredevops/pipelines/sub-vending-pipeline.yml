@@ -31,4 +31,4 @@ jobs:
         --parameters $(TemplateParameterFile) \
         --location $(Location) \
         --management-group-id $(ManagementGroupId) \
-        --name --name $(DeploymentName:0:63)
+        --name $(DeploymentName:0:63)
