@@ -14,5 +14,6 @@ module subscription 'br/public:lz/sub-vending:1.5.1' = {
     subscriptionAliasName: subscriptionAliasName
     subscriptionDisplayName: subscriptionDisplayName
     subscriptionTags: subscriptionTags
+    subscriptionWorkload: 'Production'
   }
 }
