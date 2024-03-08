@@ -8,6 +8,11 @@ pool:
 variables:
   ServiceConnectionName: "deploy-bicep"
   RunNumber: $(Build.BuildNumber)
+  DeploymentName: "sub-vend-$(RunNumber)"
+  ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
+  Location: "australiaeast"
+  TemplateParameterFile: "@/parameters/subscription/identity-sub.parameters.json"
+  TemplateFile: "/subscription.bicep"
 
 jobs:
 - job:
@@ -21,8 +26,9 @@ jobs:
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az deployment tenant create \
-        --template-file infra-as-code/bicep/modules/managementGroups/managementGroups.bicep \
-        --parameters parTopLevelManagementGroupPrefix=$(ManagementGroupPrefix) parTopLevelManagementGroupDisplayName="$(TopLevelManagementGroupDisplayName)" \
+        az deployment mg create \
+        --template-file $(TemplateFile) \
+        --parameters $(TemplateParameterFile) \
         --location $(Location) \
-        --name create_mgs-$(RunNumber)
+        -- --management-group-id $(ManagementGroupId) \
+        --name --name $(DeploymentName:0:63)
