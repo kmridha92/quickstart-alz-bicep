@@ -6,7 +6,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  ServiceConnectionName: "deploy-bicep"
+  ServiceConnectionName: "rapid-alz-bicep-SP"
   RunNumber: $(Build.BuildNumber)
   DeploymentName: "sub-vend-$(RunNumber)"
   ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
