@@ -1,0 +1,28 @@
+trigger: none
+
+name: deploySubscription
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  ServiceConnectionName: "deploy-bicep"
+  RunNumber: $(Build.BuildNumber)
+
+jobs:
+- job:
+  steps:
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Management Groups
+    name: create_mgs
+    inputs:
+      azureSubscription: $(ServiceConnectionName)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az deployment tenant create \
+        --template-file infra-as-code/bicep/modules/managementGroups/managementGroups.bicep \
+        --parameters parTopLevelManagementGroupPrefix=$(ManagementGroupPrefix) parTopLevelManagementGroupDisplayName="$(TopLevelManagementGroupDisplayName)" \
+        --location $(Location) \
+        --name create_mgs-$(RunNumber)

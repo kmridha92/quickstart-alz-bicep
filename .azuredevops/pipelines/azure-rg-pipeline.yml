@@ -1,0 +1,50 @@
+trigger: none
+
+name: deployResourceGroup
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  serviceConnection: 'deploy-bicep'
+  subscriptionId: '1624e069-d8df-4789-bcd0-63ba3e3bf627'
+  location: 'australiaeast'
+  RunNumber: $(Build.BuildNumber)
+
+parameters:
+- name: ParametersFile
+  displayName: Parameters File
+  type: string
+  default: resourceGroup1.parameters.json
+
+jobs:
+  - job: ValidateBicep
+    steps:
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: ARM Validate Bicep IaC
+        inputs:
+          deploymentScope: 'Subscription'
+          azureResourceManagerConnection: '$(serviceConnection)'
+          subscriptionId: '$(subscriptionId)'
+          location: '$(location)'
+          templateLocation: 'Linked artifact'
+          csmFile: 'resourceGroup.bicep'
+          csmParametersFile: 'parameters/resourceGroup/${{ parameters.ParametersFile }}'
+          deploymentMode: 'Validation'
+  - job: DeployBicep
+    dependsOn: ValidateBicep
+    steps:
+      - task: AzureCLI@2
+        displayName: Az CLI Deploy Bicep IaC
+        inputs:
+          azureSubscription: '$(serviceConnection)'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            az account set --subscription $(subscriptionId)
+            az deployment sub create \
+            --name create-rg-$(RunNumber) \
+            --location $(location) \
+            --template-file resourceGroup.bicep \
+            --parameters parameters/resourceGroup/${{ parameters.ParametersFile }}
+      
