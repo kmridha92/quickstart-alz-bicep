@@ -22,6 +22,7 @@ jobs:
     displayName: Az CLI Deploy Subscription
     name: create_mgs
     inputs:
+      workingDirectory: $(Build.SourcesDirectory)
       azureSubscription: $(ServiceConnectionName)
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
