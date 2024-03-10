@@ -7,17 +7,10 @@ pool:
 
 variables:
   ServiceConnectionName: "rapid-alz-bicep-SP"
-  # ManagementGroupPrefix: "alz"
-  # TopLevelManagementGroupDisplayName: "Azure Landing Zones"
-  # Location: "australiaeast"
-  # LoggingSubId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  # LoggingResourceGroupName: "alz-logging"
-  # HubNetworkSubId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  # HubNetworkResourceGroupName: "Hub_Networking_POC"
-  # RoleAssignmentManagementGroupId: "alz-platform"
-  # SpokeNetworkSubId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  # SpokeNetworkResourceGroupName: "Spoke_Networking_POC"
   RunNumber: $(Build.BuildNumber)
+  DeploymentName: "mg-create-$(RunNumber)"
+  ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
+  # ManagementGroupId : "poc"
   Location: "australiaeast"
   # TemplateParameterFile: "parameters/subscription/${{ parameters.ParametersFile }}"
   TemplateFile: "managementGroup.bicep"
@@ -33,8 +26,14 @@ jobs:
       azureSubscription: $(ServiceConnectionName)
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
+      # inlineScript: |
+      #   az deployment tenant create \
+      #   --template-file $(TemplateFile) \
+      #   --location $(Location) \
+      #   --name create_mgs-$(RunNumber)
       inlineScript: |
-        az deployment tenant create \
-        --template-file $(TemplateFile) \
+        az deployment mg create \
+        --name $(DeploymentName) \
         --location $(Location) \
-        --name create_mgs-$(RunNumber)
+        --management-group-id $(ManagementGroupId) \
+        --template-file $(TemplateFile)
