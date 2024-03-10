@@ -38,6 +38,6 @@ jobs:
         --name $(DeploymentName) \
         --location $(Location) \
         --management-group-id $(ManagementGroupId) \
-        --no-wait true\
+        --no-wait \
         --template-file $(TemplateFile) \
         --parameters $(TemplateParameterFile)
