@@ -4,6 +4,7 @@ targetScope = 'managementGroup'
 
 module base 'br/public:avm/res/management/management-group:0.1.1' = {
   name: '${uniqueString(deployment().name)}-base-poc'
+  // scope: tenant()
   params: {
     name: 'base-poc'
     displayName: 'Base-poc'
@@ -18,6 +19,22 @@ module identity 'br/public:avm/res/management/management-group:0.1.1' = {
     name: 'identity-poc'
     displayName: 'Identity-poc'
     location: location
-    parentId: 'base-poc'
+    parentId: base.outputs.name
   }
+  dependsOn: [
+    base
+  ]
+}
+
+module connectivity 'br/public:avm/res/management/management-group:0.1.1' = {
+  name: '${uniqueString(deployment().name)}-connectivity-poc'
+  params: {
+    name: 'connectivity-poc'
+    displayName: 'Connectivity-poc'
+    location: location
+    parentId: base.outputs.name
+  }
+  dependsOn: [
+    base
+  ]
 }

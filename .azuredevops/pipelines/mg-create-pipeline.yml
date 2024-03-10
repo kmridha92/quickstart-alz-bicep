@@ -23,7 +23,7 @@ variables:
   TemplateFile: "managementGroup.bicep"
 
 jobs:
-- job:
+- job: ManagementGroupCreation
   steps:
 
   - task: AzureCLI@2
