@@ -1,0 +1,40 @@
+trigger: none
+
+name: deployMG
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  ServiceConnectionName: "rapid-alz-bicep"
+  # ManagementGroupPrefix: "alz"
+  # TopLevelManagementGroupDisplayName: "Azure Landing Zones"
+  # Location: "australiaeast"
+  # LoggingSubId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  # LoggingResourceGroupName: "alz-logging"
+  # HubNetworkSubId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  # HubNetworkResourceGroupName: "Hub_Networking_POC"
+  # RoleAssignmentManagementGroupId: "alz-platform"
+  # SpokeNetworkSubId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  # SpokeNetworkResourceGroupName: "Spoke_Networking_POC"
+  RunNumber: $(Build.BuildNumber)
+  Location: "australiaeast"
+  # TemplateParameterFile: "parameters/subscription/${{ parameters.ParametersFile }}"
+  TemplateFile: "managementGroup.bicep"
+
+jobs:
+- job:
+  steps:
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Management Groups
+    name: create_mgs
+    inputs:
+      azureSubscription: $(ServiceConnectionName)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az deployment tenant create \
+        --template-file $(TemplateFile) \
+        --location $(Location) \
+        --name create_mgs-$(RunNumber)
