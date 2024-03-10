@@ -13,6 +13,20 @@ module base 'br/public:avm/res/management/management-group:0.1.1' = {
   }
 }
 
+module platform 'br/public:avm/res/management/management-group:0.1.1' = {
+  name: '${uniqueString(deployment().name)}-platform-poc'
+  // scope: managementGroup('Tenant Root Group')
+  params: {
+    name: 'platform-poc'
+    displayName: 'Platform-poc'
+    location: location
+    parentId: base.outputs.name
+  }
+  dependsOn: [
+    base
+  ]
+}
+
 module identity 'br/public:avm/res/management/management-group:0.1.1' = {
   name: '${uniqueString(deployment().name)}-identity-poc'
   // scope: managementGroup('Tenant Root Group')
@@ -20,10 +34,10 @@ module identity 'br/public:avm/res/management/management-group:0.1.1' = {
     name: 'identity-poc'
     displayName: 'Identity-poc'
     location: location
-    parentId: base.outputs.name
+    parentId: platform.outputs.name
   }
   dependsOn: [
-    base
+    platform
   ]
 }
 
@@ -34,9 +48,23 @@ module connectivity 'br/public:avm/res/management/management-group:0.1.1' = {
     name: 'connectivity-poc'
     displayName: 'Connectivity-poc'
     location: location
-    parentId: base.outputs.name
+    parentId: platform.outputs.name
   }
   dependsOn: [
-    base
+    platform
+  ]
+}
+
+module management 'br/public:avm/res/management/management-group:0.1.1' = {
+  name: '${uniqueString(deployment().name)}-management-poc'
+  // scope: managementGroup('Tenant Root Group')
+  params: {
+    name: 'identity-poc'
+    displayName: 'Identity-poc'
+    location: location
+    parentId: platform.outputs.name
+  }
+  dependsOn: [
+    platform
   ]
 }
