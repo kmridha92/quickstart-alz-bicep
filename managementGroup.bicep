@@ -1,10 +1,10 @@
 param location string = 'australiaeast'
 
-targetScope = 'managementGroup'
+targetScope = 'tenant'
 
 module base 'br/public:avm/res/management/management-group:0.1.1' = {
   name: '${uniqueString(deployment().name)}-base-poc'
-  // scope: tenant()
+  scope: managementGroup('Tenant Root Group')
   params: {
     name: 'base-poc'
     displayName: 'Base-poc'
@@ -15,6 +15,7 @@ module base 'br/public:avm/res/management/management-group:0.1.1' = {
 
 module identity 'br/public:avm/res/management/management-group:0.1.1' = {
   name: '${uniqueString(deployment().name)}-identity-poc'
+  scope: managementGroup('Tenant Root Group')
   params: {
     name: 'identity-poc'
     displayName: 'Identity-poc'
@@ -28,6 +29,7 @@ module identity 'br/public:avm/res/management/management-group:0.1.1' = {
 
 module connectivity 'br/public:avm/res/management/management-group:0.1.1' = {
   name: '${uniqueString(deployment().name)}-connectivity-poc'
+  scope: managementGroup('Tenant Root Group')
   params: {
     name: 'connectivity-poc'
     displayName: 'Connectivity-poc'
