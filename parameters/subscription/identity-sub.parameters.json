@@ -18,6 +18,9 @@
       "value": {
         "Iac": "Bicep"
       }
+    },
+    "subscriptionManagementGroupId": {
+      "value": "identity-poc"
     }
   }
 }
