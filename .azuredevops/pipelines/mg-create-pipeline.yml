@@ -6,7 +6,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  ServiceConnectionName: "rapid-alz-bicep"
+  ServiceConnectionName: "rapid-alz-bicep-SP"
   # ManagementGroupPrefix: "alz"
   # TopLevelManagementGroupDisplayName: "Azure Landing Zones"
   # Location: "australiaeast"
