@@ -1,7 +1,5 @@
 trigger: none
 
-name: deploySubscription
-
 pool:
   vmImage: ubuntu-latest
 

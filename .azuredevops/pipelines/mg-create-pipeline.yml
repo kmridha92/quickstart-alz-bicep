@@ -1,7 +1,5 @@
 trigger: none
 
-name: deployMG
-
 pool:
   vmImage: ubuntu-latest
 
