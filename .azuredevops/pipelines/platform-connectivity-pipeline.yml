@@ -19,7 +19,7 @@ jobs:
 
   - task: AzureCLI@2
     displayName: Az CLI Deploy Subscription
-    name: create_update_connectivity_sub
+    name: place_connectivity_sub
     inputs:
       workingDirectory: '$(Build.SourcesDirectory)'
       azureSubscription: '$(ServiceConnectionName)'
