@@ -1,24 +1,19 @@
-param location string
-param subscriptionBillingScope string
-param subscriptionAliasName string
-param subscriptionDisplayName string
-param subscriptionTags object
-param subscriptionManagementGroupId string
-param deploymentScriptResourceGroupName string = '${subscriptionAliasName}-rg'
+param location string = 'australiaeast'
+param subscriptionManagementGroupId string = 'poc-platform-management'
 
 targetScope = 'managementGroup'
 
 module subscription 'br/public:lz/sub-vending:1.5.1' = {
-  name: '${uniqueString(deployment().name, location)}-sub-poc'
+  name: '${uniqueString(deployment().name, location)}-management-sub'
   params: {
-    subscriptionAliasEnabled: true
-    subscriptionBillingScope: subscriptionBillingScope
-    subscriptionAliasName: subscriptionAliasName
-    subscriptionDisplayName: subscriptionDisplayName
-    subscriptionTags: subscriptionTags
+    subscriptionAliasEnabled: false
+    existingSubscriptionId: 'c57a9a06-e36a-452a-a1ab-16b99eb747bf'
+    subscriptionTags: {
+      IaC: 'Bicep'
+      subscription: 'management'
+    }
     subscriptionWorkload: 'Production'
     subscriptionManagementGroupAssociationEnabled: true
     subscriptionManagementGroupId: subscriptionManagementGroupId
-    deploymentScriptResourceGroupName: deploymentScriptResourceGroupName
   }
 }

@@ -1,6 +1,5 @@
-param location string 
-param name string
-param tags object
+param location string  = 'australiaeast'
+param name string = 'management-rg'
 
 targetScope = 'subscription'
 
@@ -9,6 +8,9 @@ module resourceGroup 'br/public:avm/res/resources/resource-group:0.2.3' = {
   params: {
     name: name
     location: location
-    tags: tags
+    tags: {
+      IaC: 'Bicep'
+      subscription: 'management'
+    }
   }
 }
