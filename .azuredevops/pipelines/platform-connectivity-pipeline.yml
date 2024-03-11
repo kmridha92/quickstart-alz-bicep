@@ -8,7 +8,7 @@ variables:
   RunNumber: $(Build.BuildNumber)
   ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
   Location: "australiaeast"
-  SubTemplateParameterFile: "parameters/subscription/platform/connectivity-sub.parameters.json"
+  # SubTemplateParameterFile: "parameters/subscription/platform/connectivity-sub.parameters.json"
   SubTemplateFile: "platform/connectivity/subscription.bicep"
   # RGTemplateParameterFile: "parameters/subscription/platform/connectivity-sub.parameters.json"
   RGTemplateFile: "platform/connectivity/resourceGroup.bicep"
@@ -31,8 +31,7 @@ jobs:
         --location $(Location) \
         --management-group-id $(ManagementGroupId) \
         --no-wait \
-        --template-file $(SubTemplateFile) \
-        --parameters $(SubTemplateParameterFile)
+        --template-file $(SubTemplateFile)
 
   - task: AzureCLI@2
     displayName: Az CLI Deploy Resource Group

@@ -1,9 +1,9 @@
-param location string
+param location string = 'australiaeast'
 // param subscriptionBillingScope string
 // param subscriptionAliasName string
 // param subscriptionDisplayName string
-param subscriptionTags object
-param subscriptionManagementGroupId string
+// param subscriptionTags object
+param subscriptionManagementGroupId string = 'poc-platform-connectivity'
 
 targetScope = 'managementGroup'
 
@@ -15,7 +15,10 @@ module subscription 'br/public:lz/sub-vending:1.5.1' = {
     // subscriptionBillingScope: subscriptionBillingScope
     // subscriptionAliasName: subscriptionAliasName
     // subscriptionDisplayName: subscriptionDisplayName
-    subscriptionTags: subscriptionTags
+    subscriptionTags: {
+      IaC: 'Bicep'
+      subscription: 'connectivity'
+    }
     subscriptionWorkload: 'Production'
     subscriptionManagementGroupAssociationEnabled: true
     subscriptionManagementGroupId: subscriptionManagementGroupId
