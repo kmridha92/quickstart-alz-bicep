@@ -1,0 +1,50 @@
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  ServiceConnectionName: "rapid-alz-bicep-SP"
+  RunNumber: $(Build.BuildNumber)
+  ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
+  Location: "australiaeast"
+  SubTemplateParameterFile: "parameters/subscription/platform/connectivity-sub.parameters.json"
+  SubTemplateFile: "platform/connectivity/subscription.bicep"
+  # RGTemplateParameterFile: "parameters/subscription/platform/connectivity-sub.parameters.json"
+  RGTemplateFile: "platform/connectivity/resourceGroup.bicep"
+
+jobs:
+- job: PlatformConnectivity
+  steps:
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Subscription
+    name: create_update_connectivity_sub
+    inputs:
+      workingDirectory: '$(Build.SourcesDirectory)'
+      azureSubscription: '$(ServiceConnectionName)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az deployment mg create \
+        --name create-sub-$(RunNumber) \
+        --location $(Location) \
+        --management-group-id $(ManagementGroupId) \
+        --no-wait \
+        --template-file $(SubTemplateFile) \
+        --parameters $(SubTemplateParameterFile)
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Resource Group
+    name: create_update_resource_group
+    inputs:
+      workingDirectory: '$(Build.SourcesDirectory)'
+      azureSubscription: '$(ServiceConnectionName)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az account set --subscription connectivity
+        az deployment sub create \
+        --name create-rg-$(RunNumber) \
+        --location $(Location) \
+        --template-file $(RGTemplateFile)
