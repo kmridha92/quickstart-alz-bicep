@@ -1,5 +1,5 @@
 param location string = 'australiaeast'
-param initial string = 'saw'
+param initial string = 'poc'
 
 targetScope = 'managementGroup'
 
@@ -7,7 +7,7 @@ module base 'br/public:avm/res/management/management-group:0.1.1' = {
   name: '${uniqueString(deployment().name)}-base'
   params: {
     name: initial
-    displayName: 'SAWater-MG'
+    displayName: 'POC-MG'
     location: location
     parentId: '58f7c0d7-3191-43d3-a803-62d8805626de'
   }
