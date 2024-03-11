@@ -8,10 +8,10 @@ variables:
   RunNumber: $(Build.BuildNumber)
   ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
   Location: "australiaeast"
-  # SubTemplateParameterFile: "parameters/subscription/platform/connectivity-sub.parameters.json"
-  SubTemplateFile: "platform/connectivity/subscription.bicep"
+  # SubTemplateParameterFile: "parameters/subscription/platform/identity-sub.parameters.json"
+  SubTemplateFile: "platform/identity/subscription.bicep"
   # RGTemplateParameterFile: "parameters/resourceGroup/resourceGroup.parameters.json"
-  RGTemplateFile: "platform/connectivity/resourceGroup.bicep"
+  RGTemplateFile: "platform/identity/resourceGroup.bicep"
 
 jobs:
 - job: PlatformConnectivity
@@ -19,7 +19,7 @@ jobs:
 
   - task: AzureCLI@2
     displayName: Az CLI Deploy Subscription
-    name: place_connectivity_sub
+    name: place_identity_sub
     inputs:
       workingDirectory: '$(Build.SourcesDirectory)'
       azureSubscription: '$(ServiceConnectionName)'
@@ -41,7 +41,7 @@ jobs:
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az account set --subscription connectivity
+        az account set --subscription identity
         az deployment sub create \
         --name create-rg-$(RunNumber) \
         --location $(Location) \
