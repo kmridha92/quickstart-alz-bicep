@@ -1,22 +1,23 @@
 param location string = 'australiaeast'
+param initial string = 'saw'
 
 targetScope = 'managementGroup'
 
 module base 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-base-poc'
+  name: '${uniqueString(deployment().name)}-base'
   params: {
-    name: 'base-poc'
-    displayName: 'Base-poc'
+    name: initial
+    displayName: 'SAWater-MG'
     location: location
     parentId: '58f7c0d7-3191-43d3-a803-62d8805626de'
   }
 }
 
 module platform 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-platform-poc'
+  name: '${uniqueString(deployment().name)}-platform'
   params: {
-    name: 'platform-poc'
-    displayName: 'Platform-poc'
+    name: '${initial}-platform'
+    displayName: 'Platform'
     location: location
     parentId: base.outputs.name
   }
@@ -26,10 +27,10 @@ module platform 'br/public:avm/res/management/management-group:0.1.1' = {
 }
 
 module identity 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-identity-poc'
+  name: '${uniqueString(deployment().name)}-identity'
   params: {
-    name: 'identity-poc'
-    displayName: 'Identity-poc'
+    name: '${platform.outputs.name}-identity'
+    displayName: 'Identity'
     location: location
     parentId: platform.outputs.name
   }
@@ -39,10 +40,10 @@ module identity 'br/public:avm/res/management/management-group:0.1.1' = {
 }
 
 module connectivity 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-connectivity-poc'
+  name: '${uniqueString(deployment().name)}-connectivity'
   params: {
-    name: 'connectivity-poc'
-    displayName: 'Connectivity-poc'
+    name: '${platform.outputs.name}-connectivity'
+    displayName: 'Connectivity'
     location: location
     parentId: platform.outputs.name
   }
@@ -52,10 +53,10 @@ module connectivity 'br/public:avm/res/management/management-group:0.1.1' = {
 }
 
 module management 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-management-poc'
+  name: '${uniqueString(deployment().name)}-management'
   params: {
-    name: 'management-poc'
-    displayName: 'Management-poc'
+    name: '${platform.outputs.name}-management'
+    displayName: 'Management'
     location: location
     parentId: platform.outputs.name
   }
@@ -65,10 +66,10 @@ module management 'br/public:avm/res/management/management-group:0.1.1' = {
 }
 
 module lz 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-lz-poc'
+  name: '${uniqueString(deployment().name)}-lz'
   params: {
-    name: 'landing-zones-poc'
-    displayName: 'Landing-Zones-poc'
+    name: '${initial}-landingzones'
+    displayName: 'Landing Zones'
     location: location
     parentId: base.outputs.name
   }
@@ -78,10 +79,10 @@ module lz 'br/public:avm/res/management/management-group:0.1.1' = {
 }
 
 module corp 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-corp-poc'
+  name: '${uniqueString(deployment().name)}-corp'
   params: {
-    name: 'corp-poc'
-    displayName: 'Corp-poc'
+    name: '${lz.outputs.name}-corp'
+    displayName: 'Corp'
     location: location
     parentId: lz.outputs.name
   }
@@ -90,41 +91,15 @@ module corp 'br/public:avm/res/management/management-group:0.1.1' = {
   ]
 }
 
-module online 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-online-poc'
+module dmz 'br/public:avm/res/management/management-group:0.1.1' = {
+  name: '${uniqueString(deployment().name)}-dmz'
   params: {
-    name: 'online-poc'
-    displayName: 'Online-poc'
+    name: '${lz.outputs.name}-dmz'
+    displayName: 'DMZ'
     location: location
     parentId: lz.outputs.name
   }
   dependsOn: [
     lz
-  ]
-}
-
-module sandbox 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-sandbox-poc'
-  params: {
-    name: 'sandbox-poc'
-    displayName: 'Sandbox-poc'
-    location: location
-    parentId: base.outputs.name
-  }
-  dependsOn: [
-    base
-  ]
-}
-
-module decommissioned 'br/public:avm/res/management/management-group:0.1.1' = {
-  name: '${uniqueString(deployment().name)}-decommissioned-poc'
-  params: {
-    name: 'decommissioned-poc'
-    displayName: 'Decommissioned-poc'
-    location: location
-    parentId: base.outputs.name
-  }
-  dependsOn: [
-    base
   ]
 }
