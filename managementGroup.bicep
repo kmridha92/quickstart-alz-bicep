@@ -1,5 +1,6 @@
 param location string = 'australiaeast'
 param initial string = 'poc'
+param tenantGroupId string = '58f7c0d7-3191-43d3-a803-62d8805626de'
 
 targetScope = 'managementGroup'
 
@@ -9,7 +10,7 @@ module base 'br/public:avm/res/management/management-group:0.1.1' = {
     name: initial
     displayName: 'POC-MG'
     location: location
-    parentId: '58f7c0d7-3191-43d3-a803-62d8805626de'
+    parentId: tenantGroupId
   }
 }
 
