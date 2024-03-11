@@ -30,7 +30,6 @@ jobs:
         --name create-sub-$(RunNumber) \
         --location $(Location) \
         --management-group-id $(ManagementGroupId) \
-        --no-wait \
         --template-file $(SubTemplateFile)
 
   - task: AzureCLI@2
