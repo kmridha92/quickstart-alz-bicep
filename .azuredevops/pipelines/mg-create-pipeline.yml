@@ -1,0 +1,37 @@
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  ServiceConnectionName: "rapid-alz-bicep-SP"
+  RunNumber: $(Build.BuildNumber)
+  DeploymentName: "mg-create-$(RunNumber)"
+  ManagementGroupId : "58f7c0d7-3191-43d3-a803-62d8805626de" # Tenant Root Group ID
+  # ManagementGroupId : "poc"
+  Location: "australiaeast"
+  # TemplateParameterFile: "parameters/subscription/${{ parameters.ParametersFile }}"
+  TemplateFile: "managementGroup.bicep"
+
+jobs:
+- job: ManagementGroupCreation
+  steps:
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Management Groups
+    name: create_mgs
+    inputs:
+      azureSubscription: $(ServiceConnectionName)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      # inlineScript: |
+      #   az deployment tenant create \
+      #   --template-file $(TemplateFile) \
+      #   --location $(Location) \
+      #   --name create_mgs-$(RunNumber)
+      inlineScript: |
+        az deployment mg create \
+        --name $(DeploymentName) \
+        --location $(Location) \
+        --management-group-id $(ManagementGroupId) \
+        --template-file $(TemplateFile)

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "australiaeast"
+    },
+    "subscriptionBillingScope": {
+      "value": "/providers/Microsoft.Billing/billingAccounts/d808be91-b8d1-528d-2635-049c1ce9eed8:e8f8a48d-efcf-46d5-8bc0-3a10323d79f9_2019-05-31/billingProfiles/USXI-ZNOE-BG7-PGB/invoiceSections/PXNS-QP4P-PJA-PGB"
+    },
+    "subscriptionAliasName": {
+      "value": "Identity-poc"
+    },
+    "subscriptionDisplayName": {
+      "value": "Identity-poc"
+    },
+    "subscriptionTags": {
+      "value": {
+        "Iac": "Bicep"
+      }
+    },
+    "subscriptionManagementGroupId": {
+      "value": "identity-poc"
+    }
+  }
+}

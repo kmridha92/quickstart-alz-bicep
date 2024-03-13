@@ -1,0 +1,119 @@
+name: LintAndBuild
+
+pool:
+  vmImage: windows-latest
+
+trigger: none
+# YAML PR triggers are supported only in GitHub and Bitbucket Cloud.
+# If you use Azure Repos Git, you can configure a branch policy for build validation to trigger your build pipeline for validation.
+# https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies#build-validation
+pr:
+  branches:
+    include:
+      - "main"
+
+parameters:
+  - name: OnlyLintChangedFiles
+    type: boolean
+    default: true
+    displayName: "Only lint changed files"
+  - name: OnlyBuildChangedFiles
+    type: boolean
+    default: true
+    displayName: "Only build changed files"
+
+jobs:
+
+  - job: LintBicep
+    displayName: Lint Bicep Modules and Files
+    steps:
+      - task: PowerShell@2
+        displayName: "[Lint] Azure Bicep Template Files"
+        inputs:
+          targetType: "inline"
+          pwsh: true
+          script: |
+            $lintChangedFiles = ${{ parameters.OnlyLintChangedFiles }}
+            $bicepTemplates = @()
+            $failedLints = @() # Array to hold paths of failed lints
+
+            if ($lintChangedFiles) {
+              $bicepTemplates = git --no-pager diff --name-only --relative $(git merge-base HEAD main) | Select-String -Pattern "\.bicep$"
+            } else {
+              $bicepTemplates = Get-ChildItem -Path $(Build.SourcesDirectory) -Recurse -Filter *.bicep | Select-Object FullName -ExpandProperty FullName
+            }
+
+            Write-Host "Found $($bicepTemplates.Count) Bicep templates to lint:"
+            $bicepTemplates
+
+            foreach ($path in $bicepTemplates) {
+              Write-Host "[Lint] Linting Bicep template $path"
+              $output = az bicep lint --file $path --only-show-errors 2>&1
+
+              if ($LASTEXITCODE -ne 0) {
+                $failedLints += [PSCustomObject]@{
+                  Path = $path
+                  ErrorMessage = $output
+                }
+              }
+            }
+
+            if ($failedLints.Count -gt 0) {
+              Write-Host "##[error][Failed] Linting failed for the following Bicep templates:"
+              [System.Environment]::NewLine
+              foreach ($failedLint in $failedLints) {
+                Write-Host "Path: $($failedLint.Path)"
+                Write-Host "Error: $($failedLint.ErrorMessage)"
+                [System.Environment]::NewLine
+              }
+              exit 1
+            } else {
+              Write-Host "All Bicep templates passed linting."
+            }
+
+  - job: BuildBicep
+    displayName: Build Bicep Modules and Files
+    steps:
+      - task: PowerShell@2
+        displayName: "[Build] Azure Bicep Template Files"
+        inputs:
+          targetType: "inline"
+          pwsh: true
+          script: |
+            $buildChangedFiles = ${{ parameters.OnlyBuildChangedFiles }}
+            $bicepTemplates = @()
+            $failedBuilds = @() # Array to hold paths of failed builds
+
+            if ($buildChangedFiles) {
+              $bicepTemplates = git --no-pager diff --name-only --relative $(git merge-base HEAD main) | Select-String -Pattern "\.bicep$"
+            } else {
+              $bicepTemplates = Get-ChildItem -Path $(Build.SourcesDirectory) -Recurse -Filter *.bicep | Select-Object FullName -ExpandProperty FullName
+            }
+
+            Write-Host "Found $($bicepTemplates.Count) Bicep templates to build:"
+            $bicepTemplates
+
+            foreach ($path in $bicepTemplates) {
+              Write-Host "[Build] Build Bicep template $path"
+              $output = az bicep build --file $path --only-show-errors 2>&1
+
+              if ($LASTEXITCODE -ne 0) {
+                $failedBuilds += [PSCustomObject]@{
+                  Path = $path
+                  ErrorMessage = $output
+                }
+              }
+            }
+
+            if ($failedBuilds.Count -gt 0) {
+              Write-Host "##[error][Failed] Build failed for the following Bicep templates:"
+              [System.Environment]::NewLine
+              foreach ($failedBuild in $failedBuilds) {
+                Write-Host "Path: $($failedBuild.Path)"
+                Write-Host "Error: $($failedBuild.ErrorMessage)"
+                [System.Environment]::NewLine
+              }
+              exit 1
+            } else {
+              Write-Host "All Bicep templates passed build."
+            }           
